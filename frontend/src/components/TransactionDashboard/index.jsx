@@ -2,15 +2,15 @@ import React, { useState, useEffect } from 'react';
 import axios from "axios";
 
 function TransactionDashboard() {
+
     const [transactions, setTransactions] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
-    const [searchQuery, setSearchQuery] = useState('');
-    const [selectedMonth, setSelectedMonth] = useState('');
     const [error, setError] = useState(false);
-    const itemsPerPage = 10;
-   const sahil = "sahil sayyad"
+    const productsPerPage = 10;
+    // const [searchQuery, setSearchQuery] = useState('');
+    // const [selectedMonth, setSelectedMonth] = useState('');
+    
     // Fetch transaction data 
-
     useEffect(() => {
 
         ( async()=> {
@@ -27,21 +27,31 @@ function TransactionDashboard() {
 
     }, []);   
 
+    const handleNextPage = () => {
+        setCurrentPage(currentPage + 1);
+    };
 
+    const handlePrevPage = () => {
+        if (currentPage > 1) { // Ensure not on the first page
+            setCurrentPage(currentPage - 1);
+        }
+    };
+
+    const indexOfLastProduct = currentPage * productsPerPage;
+    const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
+    const currentProducts = transactions.slice(indexOfFirstProduct, indexOfLastProduct);
 
 
     // Filter and paginate transactions
 
-    const filteredTransactions = transactions.filter(transaction => {
-        const titleMatch = transaction.title.toLowerCase().includes(searchQuery.toLowerCase());
-        const descriptionMatch = transaction.description.toLowerCase().includes(searchQuery.toLowerCase());
-        const monthMatch = selectedMonth === '' || new Date(transaction.dateOfSale).toLocaleString('default', { month: 'long' }) === selectedMonth;
+    // const filteredTransactions = transactions.filter(transaction => {
+    //     const titleMatch = transaction.title.toLowerCase().includes(searchQuery.toLowerCase());
+    //     const descriptionMatch = transaction.description.toLowerCase().includes(searchQuery.toLowerCase());
+    //     const monthMatch = selectedMonth === '' || new Date(transaction.dateOfSale).toLocaleString('default', { month: 'long' }) === selectedMonth;
     
-        return titleMatch || descriptionMatch || monthMatch; 
-    });
-    const indexOfLastItem = currentPage * itemsPerPage;
-    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const currentTransactions = filteredTransactions.slice(indexOfFirstItem, indexOfLastItem);
+    //     return titleMatch || descriptionMatch || monthMatch; 
+    // });
+
 
         return (
             <div className="bg-blue-100 dark:bg-gray-600  p-8 font-mono">
@@ -107,7 +117,7 @@ function TransactionDashboard() {
                                 </tr>
                             </thead>
                             <tbody>
-                            {transactions.map((transaction, index) => (
+                            {currentProducts.map((transaction, index) => (
                                 <tr key={transaction.id} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                                     <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                     {transaction.id} 
@@ -141,16 +151,18 @@ function TransactionDashboard() {
                         <div className="flex flex-col items-center mt-9">
 
                         <span className="text-sm text-gray-700 dark:text-gray-900">
-                            Showing <span className="font-semibold text-gray-900 dark:text-black">1</span> to <span className="font-semibold text-gray-900 dark:text-black">10</span> of <span className="font-semibold text-gray-900 dark:text-black">100</span> Entries
+                            Showing <span className="font-semibold text-gray-900 dark:text-black">{indexOfFirstProduct + 1}</span> to <span className="font-semibold text-gray-900 dark:text-black">{Math.min(indexOfLastProduct, transactions.length)}</span> of <span className="font-semibold text-gray-900 dark:text-black">{transactions.length}</span>
                         </span>
 
                         <div className="inline-flex mt-2 xs:mt-0">
-                            <button className="flex items-center justify-center px-4 h-10 text-base font-medium text-white bg-gray-800 rounded-s hover:bg-gray-900 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+
+                            <button onClick={handlePrevPage} disabled={currentPage === 1} className="flex items-center justify-center px-4 h-10 text-base font-medium text-white bg-gray-800 rounded-s hover:bg-gray-900 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
                                 Prev
                             </button>
-                            <button className="flex items-center justify-center px-4 h-10 text-base font-medium text-white bg-gray-800 border-0 border-s border-gray-700 rounded-e hover:bg-gray-900 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                            <button onClick={handleNextPage} disabled={indexOfLastProduct >= transactions.length} className="flex items-center justify-center px-4 h-10 text-base font-medium text-white bg-gray-800 border-0 border-s border-gray-700 rounded-e hover:bg-gray-900 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
                                 Next
                             </button>
+
                         </div>
                         </div>
 

@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const transactionSchema = new mongoose.Schema({
     id:{
-        type:String
+        type:Number
     },
     title:{
         type:String
@@ -20,7 +20,7 @@ const transactionSchema = new mongoose.Schema({
         type:String
     },
     sold:{
-        type:Boolean
+        type:String
     },
     dateOfSale:{
         type:String

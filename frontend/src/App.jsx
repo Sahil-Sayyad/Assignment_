@@ -1,5 +1,3 @@
-import { useState } from 'react'
-import './App.css'
 import TransactionDashboard from './components/TransactionDashboard'
 
 function App() {

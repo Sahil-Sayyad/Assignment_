@@ -16,7 +16,6 @@ app.get("/", async (req, res) => {
     const response = await axios.get(url);
     const transations = response.data;
     const transaction = await Transaction.create(transations);
-
     return res.json(transaction);
   } catch (err) {
     return res.json(err);
@@ -26,59 +25,10 @@ app.get("/", async (req, res) => {
 app.get("/api/transactions", async (req, res) => {
   try {
     
-    let month = req.query.month;
-    const search = req.query.search;
-    const page = parseInt(req.query.page) || 1;
-    const perPage = parseInt(req.query.per_page) || 10;
-
-    if (month === "January" || month === "january") {
-       month = "01";
-    } else if (month === "February" || month === "february") {
-      month = "02";
-    } else if (month === "March" || month === "march") {
-      month = "03";
-    } else if (month === "April" || month === "april") {
-      month = "04";
-    } else if (month === "May" || month === "may") {
-      month = "05";
-    } else if (month === "June" || month === "june") {
-      month = "06";
-    } else if (month === "july" || month === "July") {
-      month = "07";
-    } else if (month === "august" || month === "August") {
-      month = "08";
-    } else if (month === "September" || month === "september") {
-      month = "09";
-    } else if (month === "Octomber" || month === "octomber") {
-      month = "10";
-    } else if (month === "November" || month === "november") {
-      month = "11";
-    } else if (month === "December" || month === "december") {
-      month = "12";
-    }
-    const query = {};
-
-    if (month) {
-      query.dateOfSale = { $regex: new RegExp(month, "i") };
-    }
-    if (search) {
-      query.$or = [
-        { title: { $regex: new RegExp(search, "i") } },
-        { description: { $regex: new RegExp(search, "i") } },
-        { price: { $regex: new RegExp(search, "i") } },
-      ];
-    }
-
-    const totalTransactions = await Transaction.countDocuments(query);
-
-    const transactions = await Transaction.find(query)
-      .skip((page - 1) * perPage)
-      .limit(perPage);
+    const transactions = await Transaction.find()
+    .sort({ id: 1 })// 1 for ascending order
 
     return res.json({
-      total_count: totalTransactions,
-      page: page,
-      per_page: perPage,
       transactions: transactions,
     });
   } catch (err) {
