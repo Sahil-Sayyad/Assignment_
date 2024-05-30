@@ -1,9 +1,12 @@
 require("dotenv").config();
 const { default: axios } = require("axios");
 const express = require("express");
+const cors = require('cors');
 const app = express();
 const mongoose = require("./config/mongoose");
 const Transaction = require("./models/transaction");
+
+app.use(cors());
 app.use(express.json());
 
 
