@@ -28,6 +28,7 @@
 5. `cd frontend` 
 6. `npm install`
 7. `npm run dev -- this for frontend react server`
+8. `first type URL in the browser or postman 'http://localhost:8000/api/fetch' then you will able to see data.` 
 
 ## .env file
 
