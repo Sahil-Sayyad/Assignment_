@@ -21,12 +21,13 @@
 ## Running in dev environment
 
 0. `git clone https://github.com/Sahil-Sayyad/Assignment_.git`
-1. `cd your_application`
+1. `cd Assignment_`
 2. `npm install`
-3. `npm start -- this for backend server `
-4. `cd frontend` 
-5. `npm install`
-6. `npm run dev -- this for frontend react server`
+3. `set .env file MongoDB URL`
+4. `npm start -- this for backend server `
+5. `cd frontend` 
+6. `npm install`
+7. `npm run dev -- this for frontend react server`
 
 ## .env file
 
