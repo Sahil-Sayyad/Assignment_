@@ -35,7 +35,7 @@
 ## API Endpoints
 
 ```  
-    - GET /api/fetch : Create new transactions.
+    - GET /api/fetch : fetch and store transactions.
     - GET /api/transactions : Get a list of transactions.
     - GET /api/statistics : Get summary statistics about transactions.
     - GET /api/bar-chart : Get data to make a bar chart of transactions.
