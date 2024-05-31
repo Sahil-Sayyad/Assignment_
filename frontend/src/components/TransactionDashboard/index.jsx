@@ -4,28 +4,37 @@ import axios from "axios";
 function TransactionDashboard() {
 
     const [transactions, setTransactions] = useState([]);
+    const [selectedMonth, setSelectedMonth] = useState('March');
+    const [searchQuery, setSearchQuery] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
-    const [error, setError] = useState(false);
-    const productsPerPage = 10;
-    // const [searchQuery, setSearchQuery] = useState('');
-    // const [selectedMonth, setSelectedMonth] = useState('');
+    const [perPage] = useState(10);
+  
     
+    const months = [
+        'January', 'February', 'March', 'April', 'May', 'June', 
+        'July', 'August', 'September', 'October', 'November', 'December'
+    ];
+
     // Fetch transaction data 
     useEffect(() => {
+        fetchTransactions();
+    }, [selectedMonth, searchQuery , currentPage]); 
 
-        ( async()=> {
-            try {
-                setError(false)
-                const response = await axios.get('/api/transactions')
-                setTransactions(response.data.transactions);
-            } catch (error) {
-                setError(true)
-            }
+    const fetchTransactions = async () => {
+        try {
+
+            const response = await axios.get('/api/transactions',{
+
+                params:{selectedMonth,searchQuery,currentPage,perPage},
+
+            });
+            
+            setTransactions(response.data);
+        } catch (error) {
+            console.error('Error fetching transactions:', error);
         }
-
-        )()
-
-    }, []);   
+      
+    }; 
 
     const handleNextPage = () => {
         setCurrentPage(currentPage + 1);
@@ -37,21 +46,10 @@ function TransactionDashboard() {
         }
     };
 
-    const indexOfLastProduct = currentPage * productsPerPage;
-    const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
-    const currentProducts = transactions.slice(indexOfFirstProduct, indexOfLastProduct);
-
-
-    // Filter and paginate transactions
-
-    // const filteredTransactions = transactions.filter(transaction => {
-    //     const titleMatch = transaction.title.toLowerCase().includes(searchQuery.toLowerCase());
-    //     const descriptionMatch = transaction.description.toLowerCase().includes(searchQuery.toLowerCase());
-    //     const monthMatch = selectedMonth === '' || new Date(transaction.dateOfSale).toLocaleString('default', { month: 'long' }) === selectedMonth;
+    const indexOfLastProduct = currentPage * perPage;
+    const indexOfFirstProduct = indexOfLastProduct - perPage;
     
-    //     return titleMatch || descriptionMatch || monthMatch; 
-    // });
-
+    
 
         return (
             <div className="bg-blue-100 dark:bg-gray-600  p-8 font-mono">
@@ -64,24 +62,22 @@ function TransactionDashboard() {
 
                 <div className=" flex justify-between  ml-2">
                     
-                    <input type="text" name="search" placeholder="Search Transactions" className="bg-slate-50 text-black text-center rounded-[11px] p-2 font-mono border border-solid focus:ring-indigo-600 "/>
+                    <input type="text" name="search" placeholder="Search Transactions"  value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="bg-slate-50 text-black text-center rounded-[11px] p-2 font-mono border border-solid focus:ring-indigo-600 "/>
 
                         <div className=" bg-slate-50 rounded-[11px]">
 
                         <label htmlFor="month" className="sr-only">Month</label>
-                        <select id="month" name="month" className="bg-slate-50 h-full p-6 rounded-md border-0 bg-transparent py-3 pl-4 pr-20 text-gray-500 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm">
-                            <option>March</option>
-                            <option>April</option>
-                            <option>May</option>
-                            <option>June</option>
-                            <option>July</option>
-                            <option>August</option>
-                            <option>September</option>
-                            <option>October</option>
-                            <option>November</option>
-                            <option>December</option>
-                            <option>January</option>
-                            <option>Febuary</option>    
+
+                        <select 
+                                id="month" 
+                                value={selectedMonth}
+                                onChange={(e) => setSelectedMonth(e.target.value)}
+                                className="bg-slate-50 h-full p-6 rounded-md border-0 bg-transparent py-3 pl-4 pr-20 text-gray-500 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm">
+                            {months.map(month => (
+                            <option key={month} value={month}>{month}</option>
+                        ))}  
                         </select>
                         
                         </div>
@@ -89,6 +85,7 @@ function TransactionDashboard() {
                
 
                     <div className="overflow-x-auto shadow-md sm:rounded-lg mt-9">
+
                         <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
 
                             <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -112,12 +109,15 @@ function TransactionDashboard() {
                                         Sold
                                     </th>
                                     <th scope="col" className="px-6 py-3">
+                                        Date
+                                    </th>
+                                    <th scope="col" className="px-6 py-3">
                                         Image
                                     </th>
                                 </tr>
                             </thead>
                             <tbody>
-                            {currentProducts.map((transaction, index) => (
+                            {transactions.map((transaction, index) => (
                                 <tr key={transaction.id} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                                     <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                     {transaction.id} 
@@ -138,6 +138,9 @@ function TransactionDashboard() {
                                     {transaction.sold}
                                     </td>
                                     <td className="px-6 py-4">
+                                    {transaction.dateOfSale.slice(0,10)}
+                                    </td>
+                                    <td className="px-6 py-4">
                                         <img src={transaction.image} alt="image" className='h-[80px] w-[100px] rounded-[6px]'/>
                                     </td>
                                 </tr>
@@ -145,6 +148,7 @@ function TransactionDashboard() {
                                 
                             </tbody>
                         </table>
+
                     </div>
 
 
