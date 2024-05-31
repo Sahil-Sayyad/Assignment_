@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import TransactionStats from "../TransactionStats"
+import TransactionBarChart from "../TransactionBarChart"
 import axios from "axios";
 
 function TransactionDashboard() {
@@ -28,7 +30,7 @@ function TransactionDashboard() {
                 params:{selectedMonth,searchQuery,currentPage,perPage},
 
             });
-            
+
             setTransactions(response.data);
         } catch (error) {
             console.error('Error fetching transactions:', error);
@@ -48,7 +50,6 @@ function TransactionDashboard() {
 
     const indexOfLastProduct = currentPage * perPage;
     const indexOfFirstProduct = indexOfLastProduct - perPage;
-    
     
 
         return (
@@ -169,7 +170,10 @@ function TransactionDashboard() {
 
                         </div>
                         </div>
-
+                    {/* Transaction Stats */} 
+                    <TransactionStats month={selectedMonth}/>
+                    {/** Transaction Bar Chart */}
+                    <TransactionBarChart month={selectedMonth}/>            
 
 
             </div>
