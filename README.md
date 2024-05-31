@@ -3,14 +3,19 @@
 ## Description
 
 `- This React application is built using [vite](https://vitejs.dev).`
+
 `- It Uses [Tailwind CSS](https://tailwindcss.com/).`
+
 `- The application uses node.js as backend.`
+
 `- Database it uses MongoDB.`
 
 ## Pre-requisites
 
 `- [git](https://git-scm.com/) - v2.13 or greater`
+
 `- [NodeJs](https://nodejs.org/en/) -v16 or greater`
+
 `- [npm](https://www.npmjs.com/) -v6 or greater`
 
 ## Running in dev environment
@@ -25,7 +30,7 @@
 
 ## .env file
 
-`this file contains various environment variables that you can configure.`
+`this file contains mongodb environment variable that you can configure.`
 
 ## API Endpoints
 
@@ -37,5 +42,5 @@
 
     Note: 
     - Here you don't need request all api's these api's managed by frontend with react,
-      Just here you need to hit the "backend-server/api/fetch" for e.g(http:localhost:8000/api/fetch ) for the fetching data and storing in db.
+      Just here you need to hit the "backend-server/api/fetch" for e.g(http://localhost:8000/api/fetch ) for the fetching data and storing in db.
 ```
