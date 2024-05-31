@@ -36,11 +36,11 @@
 
 ```  
     - GET /api/fetch : fetch and store transactions.
-    - GET /api/transactions : Get a list of transactions.
-    - GET /api/statistics : Get summary statistics about transactions.
-    - GET /api/bar-chart : Get data to make a bar chart of transactions.
+    - GET /api/transactions?selectedMonth=March&searchQuery=&currentPage=1&perPage=10 : Get a list of transactions with filter and sorting.
+    - GET /api/statistics?month=March : Get summary statistics about transactions with filter and sorting.
+    - GET /api/bar-chart?month=March : Get data for bar chart transactions with filter and sorting.
 
     Note: 
     - Here you don't need request all api's these api's managed by frontend with react,
-      Just here you need to hit the "backend-server/api/fetch" for e.g(http://localhost:8000/api/fetch ) for the fetching data and storing in db.
+      Just here you need to hit the "backend-server/api/fetch" for first time e.g(http://localhost:8000/api/fetch ) for the fetching data and storing in db.
 ```
