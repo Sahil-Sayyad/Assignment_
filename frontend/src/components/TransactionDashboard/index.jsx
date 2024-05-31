@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import TransactionStats from "../TransactionStats"
 import TransactionBarChart from "../TransactionBarChart"
+import TransactionPieChart from "../TransactionPieChart"
 import axios from "axios";
 
 function TransactionDashboard() {
@@ -173,7 +174,9 @@ function TransactionDashboard() {
                     {/* Transaction Stats */} 
                     <TransactionStats month={selectedMonth}/>
                     {/** Transaction Bar Chart */}
-                    <TransactionBarChart month={selectedMonth}/>            
+                    <TransactionBarChart month={selectedMonth}/>
+                    {/** Transaction Pie Chart */}
+                    <TransactionPieChart month={selectedMonth}/>            
 
 
             </div>

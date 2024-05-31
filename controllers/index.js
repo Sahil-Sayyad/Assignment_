@@ -148,7 +148,7 @@ const getTransactionsBarChart = async (req, res) => {
       const rangeA = parseInt(a.range.split("-")[0]);
       const rangeB = parseInt(b.range.split("-")[0]);
       return rangeA - rangeB;
-  });
+    });
     return res.json(barChartData);
   } catch (error) {
     console.error("Error fetching bar chart data:", error);
@@ -156,9 +156,78 @@ const getTransactionsBarChart = async (req, res) => {
   }
 };
 
+const getTransactionsPieChart = async (req, res) => {
+  try {
+    const { month } = req.query;
+    const monthIndex = new Date(`${month} 1, 2021`).getMonth() + 1;
+
+    const matchQuery = {
+      $expr: {
+        $eq: [
+          { $month: { $dateFromString: { dateString: "$dateOfSale" } } },
+          monthIndex,
+        ],
+      },
+    };
+    const transactions = await Transaction.find(matchQuery);
+
+    // Extract unique categories from the transactions
+    const uniqueCategories = [...new Set(transactions.map(transaction => transaction.category))];
+    //Count the number of items for each unique category
+        const categoryCounts = {};
+        uniqueCategories.forEach(category => {
+            categoryCounts[category] = transactions.filter(transaction => transaction.category === category).length;
+        });
+
+        // Format data for response
+        const pieChartData = Object.keys(categoryCounts).map(category => ({
+            category,
+            count: categoryCounts[category]
+        }));
+
+       return res.json(pieChartData);
+  } catch (error) {
+    console.error("Error fetching bar chart data:", error);
+    res.status(500).send("Server error");
+  }
+};
+
+const getCombinedData = async (req, res) => {
+  // API endpoints to fetch data from individual APIs
+  const apiEndpoints = [
+    "http://localhost:8000/api/transactions?selectedMonth=March&searchQuery=&currentPage=1&perPage=10",
+    "http://localhost:8000/api/statistics?month=March",
+    "http://localhost:8000/api/bar-chart?month=March",
+    "http://localhost:8000/api/pie-chart?month=March",
+
+  ];
+  try {
+    // Array to store responses from individual APIs
+    const responses = [];
+    // Fetch data fro each API endpoint concurrently
+    await Promise.all(
+      apiEndpoints.map(async (endpoint) => {
+        const response = await axios.get(endpoint);
+        responses.push(response.data);
+      })
+    );
+
+    const combinedData = responses.reduce((acc, data, index) => {
+      acc[`api${index + 1}`] = data;
+      return acc;
+    }, {});
+
+    return res.json(combinedData);
+  } catch (error) {
+    console.error("Error combining data:", error);
+    res.status(500).send("Server error");
+  }
+};
 module.exports = {
   createTransactions,
   getTransactions,
   getTransactionsStats,
   getTransactionsBarChart,
+  getTransactionsPieChart,
+  getCombinedData
 };
