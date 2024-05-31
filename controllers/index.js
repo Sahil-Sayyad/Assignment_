@@ -1,6 +1,8 @@
+// require transaction model for the storing data and fetching data from db.
 const Transaction = require("../models/transaction");
+// axios for the fetching third party data.
 const { default: axios } = require("axios");
-
+// createTransactions controller function for fetching third party data and storing in db.
 const createTransactions = async (req, res) => {
   try {
     const url = "https://s3.amazonaws.com/roxiler.com/product_transaction.json";
@@ -13,7 +15,7 @@ const createTransactions = async (req, res) => {
     return res.json(err);
   }
 };
-
+// getTransactions controller function for getting data by filtering and sorting by month,search params.
 const getTransactions = async (req, res) => {
   try {
     const { selectedMonth, searchQuery, page = 1, perPage = 10 } = req.query;
@@ -47,7 +49,7 @@ const getTransactions = async (req, res) => {
     return res.json(error);
   }
 };
-
+// getTransactionsStats controller function for getting transaction stats.
 const getTransactionsStats = async (req, res) => {
   const { month } = req.query;
 
@@ -91,7 +93,7 @@ const getTransactionsStats = async (req, res) => {
     res.status(500).send("Server error");
   }
 };
-
+// getTransactionsBarChart controller function for display Bar chart by filtering and sorting with month.
 const getTransactionsBarChart = async (req, res) => {
   try {
     const { month } = req.query;
@@ -155,7 +157,7 @@ const getTransactionsBarChart = async (req, res) => {
     res.status(500).send("Server error");
   }
 };
-
+// getTransactionPieChart controller function for display Pie chart by filtering and sorting with month.
 const getTransactionsPieChart = async (req, res) => {
   try {
     const { month } = req.query;
@@ -191,7 +193,7 @@ const getTransactionsPieChart = async (req, res) => {
     res.status(500).send("Server error");
   }
 };
-
+// getCombinedData controller function for return all the 4 API's responses.
 const getCombinedData = async (req, res) => {
   // API endpoints to fetch data from individual APIs
   const apiEndpoints = [
@@ -204,7 +206,7 @@ const getCombinedData = async (req, res) => {
   try {
     // Array to store responses from individual APIs
     const responses = [];
-    // Fetch data fro each API endpoint concurrently
+    // Fetch data fro each API endpoint 
     await Promise.all(
       apiEndpoints.map(async (endpoint) => {
         const response = await axios.get(endpoint);
@@ -220,9 +222,10 @@ const getCombinedData = async (req, res) => {
     return res.json(combinedData);
   } catch (error) {
     console.error("Error combining data:", error);
-    res.status(500).send("Server error");
+    return res.status(500).send("Server error");
   }
 };
+
 module.exports = {
   createTransactions,
   getTransactions,

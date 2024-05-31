@@ -1,10 +1,10 @@
-//import all required packages
+// import mongoose package for connecting to server.
 const mongoose = require("mongoose");
 
-//sets up the mongodb cloud url
+//sets up the mongodb  url
 MongoURL = process.env.MONGO_URL;
 
-//connect to app to mongodb
+//connect  app to mongodb
 mongoose
   .connect(MongoURL)
   .then(() => console.log("DB Connected Sucessfully"))
